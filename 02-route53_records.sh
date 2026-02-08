@@ -25,7 +25,7 @@
         )
                 echo "Instance ID: $INSTANCE_ID"
                 echo "Public IP: $IP"
-                RECORD_NAME=$domain_name
+                RECORD_NAME="$domain_name"
         else
             IP=$(
             aws ec2 describe-instances \
@@ -35,7 +35,7 @@
         )
                 echo "Instance ID: $INSTANCE_ID"
                 echo "Private IP: $IP"
-                RECORD_NAME=$INSTANCE.$domain_name  
+                RECORD_NAME="$INSTANCE.$domain_name"
         fi     
             aws route53 change-resource-record-sets \
             --hosted-zone-id $zone_id \
