@@ -37,7 +37,7 @@ dnf install nodejs -y &>>$log_file
 VALIDATE $? "installing nodejs"
 
 id roboshop &>>$log_file #creating system user, if already exists it will skip
-if [ id -ne 0 ]; then
+if [ $? -ne 0 ]; then
    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
    VALIDATE $? "creating system user"
 else
