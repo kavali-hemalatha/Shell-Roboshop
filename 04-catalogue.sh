@@ -61,6 +61,6 @@ VALIDATE $? "installing dependencies"
 cp $script_path/catalogue.service /etc/systemd/system/catalogue.service
 VALIDATE $? "created systemctl service"
 
-sed -i 's/mongodb.daws-hemalatha.online/Shell-Roboshop/catalogue.service/g' /etc/systemd/system/catalogue.service
+sed -i 's/mongodb.daws-hemalatha.online/<MONGODB-SERVER-IPADDRESS>/g' /etc/systemd/system/catalogue.service
 
 
