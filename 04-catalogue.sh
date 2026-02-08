@@ -9,6 +9,7 @@ user_id=$(id -u)
 log_folder="/var/log/Shell-Roboshop"
 log_file="$log_folder/$0.log"
 script_path=$PWD
+MONGODB_HOST=daws-Hemalatha.online
 
 if [ $user_id -ne 0 ]; then
 echo -e "this script needs to be run with $R root $N user" | tee -a $log_file
@@ -52,6 +53,9 @@ VALIDATE $? "downloading code"
 cd /app 
 VALIDATE $? "moving to app directory"
 
+rm -rf /app/*
+VALIDATE $? "removing existing content"
+
 unzip /tmp/catalogue.zip
 VALIDATE $? "unzip catalogue code"
 
@@ -62,5 +66,15 @@ cp $script_path/catalogue.service /etc/systemd/system/catalogue.service
 VALIDATE $? "created systemctl service"
 
 sed -i 's/<MONGODB-SERVER-IPADDRESS>/mongodb.daws-hemalatha.online/g' /etc/systemd/system/catalogue.service
+VALIDATE $? "changing ip address in catalogue service"
 
+systemctl daemon-reload
+systemctl enable catalogue 
+systemctl start catalogue
+VALIDATE $? "starting and enabling catalogue service"
 
+cp $script_path/mongo.repo /etc/yum.repos.d/mongo.repo
+dnf install mongodb-mongosh -y
+
+mongosh --host $MONGODB_HOST </app/db/master-data.js
+mongosh --host $MONGODB_HOST
