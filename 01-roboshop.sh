@@ -4,17 +4,17 @@ sg_id=sg-0c88955dfe5d1953a
 ami_id=ami-0220d79f3f480ecf5
 
 
-for instance in $@
+for INSTANCE in $@
 do
     INSTANCE_ID=$(aws ec2 run-instances \
      --image-id $ami_id \
      --instance-type t3.micro \
      --security-group-ids $sg_id \
-     --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=$instance}]' \
+     --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$INSTANCE}]" \
      --query 'Instances[0].InstanceId' \
      --output text)
 
-     if [ $instance=='frontend' ]; then
+     if [ $INSTANCE == "frontend" ]; then
        IP=(
           aws ec2 describe-instances \
           --instance-ids $INSTANCE_ID \
