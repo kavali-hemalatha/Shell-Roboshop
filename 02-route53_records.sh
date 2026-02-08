@@ -51,7 +51,7 @@
                                     "TTL": 1,
                                     "ResourceRecords": [
                             {
-                                "Value": "''$IP''"
+                                "Value": "$IP"
                             }
                             ]
                         }
@@ -59,5 +59,5 @@
                     ]
                 }    
                 '
-                echo "record updates for $INSTANCE"
+                echo "record updated for $INSTANCE"
     done
