@@ -25,20 +25,20 @@ echo -e "$G $2.....SUCCESS" | tee -a $log_file
 fi
 }
 
-cp mongo.rep /etc/yum.repos.d/mongo.repo
+cp mongo.rep0 /etc/yum.repos.d/mongo.repo
 VALIDATE $? "copying mongo repo"
 
-dnf install mongodb-org -y 
+dnf install mongodb-org -y &>>$log_file
 VALIDATE $? "installing mongodb"
 
-systemctl enable mongod 
+systemctl enable mongod &>>$log_file
 VALIDATE $? "enabling mongodb"
 
-systemctl start mongod 
+systemctl start mongod &>>$log_file
 VALIDATE $? "Starting mongodb"
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
 VALIDATE $? "Allowing remote connections"
 
-systemctl restart mongod
+systemctl restart mongod &>>$log_file
 VALIDATE $? "restarted mongodb"
