@@ -9,7 +9,7 @@ user_id=$(id -u)
 log_folder="/var/log/Shell-Roboshop"
 log_file="$log_folder/$0.log"
 script_path=$PWD
-MONGODB_HOST=mongodb.daws-Hemalatha.online
+MONGODB_HOST=mongodb.daws-hemalatha.online
 
 if [ $user_id -ne 0 ]; then
 echo -e "this script needs to be run with $R root $N user" | tee -a $log_file
