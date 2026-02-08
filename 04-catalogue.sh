@@ -8,6 +8,7 @@ N='\e[39m'
 user_id=$(id -u)
 log_folder="/var/log/Shell-Roboshop"
 log_file="$log_folder/$0.log"
+script_path="$pwd"
 
 if [ $user_id -ne 0 ]; then
 echo -e "this script needs to be run with $R root $N user" | tee -a $log_file
@@ -34,16 +35,32 @@ VALIDATE $? "enabling nodejs 20 version"
 dnf install nodejs -y &>>$log_file
 VALIDATE $? "installing nodejs"
 
-id roboshop &>>$log_file
-if [ id -ne 0 ];then
+id roboshop &>>$log_file #creating system user, if already exists it will skip
+if [ id -ne 0 ]; then
    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
    VALIDATE $? "creating system user"
 else
-    echo -e "system user already exist ... $Y skipping $N
+    echo -e "system user already exist ... $Y skipping $N"
+fi
 
 mkdir -p /app
 VALIDATE $? "creating app directory"
 
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+VALIDATE $? "downloading code"
+
 cd /app 
+VALIDATE $? "moving to app directory"
+
 unzip /tmp/catalogue.zip
+VALIDATE $? "unzip catalogue code"
+
+npm install
+VALIDATE $? "installing dependencies"
+
+cp $script_path/catalogue.service /etc/systemd/system/catalogue.service
+VALIDATE $? "created systemctl service"
+
+sed -i 's/mongodb.daws-hemalatha.online/Shell-Roboshop/catalogue.service/g' /etc/systemd/system/catalogue.service
+
+
