@@ -25,7 +25,7 @@ echo -e "$G $2.....SUCCESS" | tee -a $log_file
 fi
 }
 
-cp mongo.rep0 /etc/yum.repos.d/mongo.repo
+cp mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "copying mongo repo"
 
 dnf install mongodb-org -y &>>$log_file
