@@ -38,7 +38,7 @@ else
     echo -e "system user already exist ... $Y skipping $N"
 fi
 
-mkdir /app 
+mkdir -p /app 
 VALIDATE $? "creating app directory"
 
 curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
@@ -46,6 +46,9 @@ VALIDATE $? "downloading the code"
 
 cd /app 
 VALIDATE $? "moving to app directory"
+
+rm -rf /app/*
+VALIDATE $? "Removing existing code"
 
 unzip /tmp/shipping.zip
 VALIDATE $? "unzipping the code"
