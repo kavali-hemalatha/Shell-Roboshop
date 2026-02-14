@@ -63,10 +63,16 @@ VALIDATE $? "created systemctl service"
 dnf install mysql -y 
 VALIDATE $? "installing mysql"
 
-mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/schema.sql
-mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/app-user.sql 
-mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/master-data.sql
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities'
+if [ $? -ne 0 ]; then
+    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/schema.sql
+    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/app-user.sql 
+    mysql -h $mysql_host -uroot -pRoboShop@1 < /app/db/master-data.sql
+    VALIDATE $? "Loaded data into MySQL" "loading data into mysql....skipping"
+else
+    echo -e "data is already loaded ... $Y SKIPPING $N"
+fi    
 
 systemctl enable shipping 
 systemctl start shipping
-VALIDATE $? "enabling and startung shipping"
+VALIDATE $? "enabling and starting shipping"
